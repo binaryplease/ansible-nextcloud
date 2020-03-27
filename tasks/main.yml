@@ -1,0 +1,62 @@
+---
+# tasks file for ansible-nextcloud
+- name: Install nextcloud and php
+  pacman:
+    name:
+      - nextcloud
+      - php
+      - php-intl
+      - php-gd
+    state: latest
+
+# Configure PHP
+
+# -name: Enable PHP OPcache in php.ini
+# opcache.enable=1
+# opcache.interned_strings_buffer=8
+# opcache.max_accelerated_files=10000
+# opcache.memory_consumption=128
+# opcache.save_comments=1
+# opcache.revalidate_freq=1
+#
+#
+# -name: Enable PHP iconv extension
+
+
+
+- name: Setup nginx configuration
+  template:
+    src: nginx_nextcloud.j2
+    dest: /etc/nginx/sites-available/nextcloud
+    owner: root
+    group: root
+    mode: '0644'
+
+
+- name: Setup symlink for nginx configuration
+  file:
+    src: /etc/nginx/sites-available/nextcloud
+    dest: /etc/nginx/sites-enabled/nextcloud
+    owner: root
+    group: root
+    state: link
+
+- name: Create nextcloud data directory
+  file:
+    path: "{{nextcloud_data_directory}}"
+    state: directory
+    owner: "{{nextcloud_user}}"
+    group: "{{nextcloud_user}}"
+    mode: '0750'
+
+- name: Ensure nextcloud files have correct permissions
+  file:
+    path: "{{item}}"
+    recurse: yes
+    state: directory
+    owner: "{{nextcloud_user}}"
+    group: "{{nextcloud_user}}"
+    mode: '0750'
+  with_items:
+    - "/usr/share/webapps/nextcloud/apps"
+

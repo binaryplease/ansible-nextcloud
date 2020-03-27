@@ -1,0 +1,8 @@
+---
+# defaults file for ansible-nextcloud
+nextcloud_root: "/usr/share/webapps/nextcloud/"
+nextcloud_server_name: "cloud.pablo.tools"
+nextcloud_user: "http"
+nextcloud_ssl_fullchain: "/usr/local/etc/letsencrypt/live/pablo.tools/fullchain.pem"
+nextcloud_ssl_privkey: "/usr/local/etc/letsencrypt/live/pablo.tools/privkey.pem"
+nextcloud_data_directory: "/mnt/data/nextcloud"
